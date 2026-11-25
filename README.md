@@ -88,6 +88,7 @@ mentorapredict-services/
 ├── config/checkstyle/         shared Checkstyle rules
 ├── libs/
 │   ├── contracts/             OpenAPI, Avro and gRPC (contracts between services)
+│   ├── arch-rules/            ArchUnit rules of the hexagonal architecture (H1, H2, H3, H8, H10)
 │   └── platform/              multi-tenancy, outbox, observability and errors
 ├── services/<svc>-service/    one Gradle subproject per service (29)
 ├── ml/                        risk inference and data analysis (Python)
@@ -101,6 +102,61 @@ Rules:
 - A service can only depend on `libs/*`, never on another service.
 - Every folder under `services/` or `libs/` that has a `build.gradle.kts` becomes a Gradle subproject automatically; there is no need to edit `settings.gradle.kts`.
 - Do not commit secrets, AWS account IDs or real data: **this repository is public**. Secrets live in AWS Secrets Manager.
+
+### Service layout and architecture tests
+
+Every service uses the same hexagonal layout under `ec.edu.mentora.<svc>`. `services/sample-service` is a working example of it: you can copy it to start a service, but you do not have to. You can also create the folders by hand or in your IDE, as long as the layout below is respected:
+
+```text
+ec.edu.mentora.<svc>/
+├── Application, config     Spring entry point and composition of beans (the only place that knows adapters and use cases)
+├── domain/                 entities, value objects, domain services, domain events and errors (no framework)
+├── application/            use cases
+│   └── port/
+│       ├── in/             input ports: use case interfaces and their commands
+│       └── out/            output ports: what the service needs from the outside
+├── infrastructure/         output adapters: repositories, Kafka, HTTP clients, cache
+│   └── outbox/             transactional outbox and its relay
+└── interfaces/             input adapters: REST controllers, request and response objects, error translation
+    └── events/             event consumers
+```
+
+A request goes `interfaces` (controller) → `application.port.in` (use case) → `domain`, and the use case reaches the outside through `application.port.out`, implemented in `infrastructure`. The domain and the use cases carry no Spring annotations; they are wired in the composition root.
+
+Every package has a `package-info.java` with `@NullMarked`, so NullAway checks it. Nothing else may live under the root package: `util` or `common` packages are rejected.
+
+The rules of DOC-CAL-08 section 3 are ArchUnit tests that live in `libs/arch-rules` and run with `./gradlew build`. A violation fails the build.
+
+| Rule | What it forbids |
+| --- | --- |
+| H1 | `domain` importing other layers or any framework: Spring, Jakarta (persistence, validation, annotations), Jackson, Hibernate, jOOQ, cloud SDKs or Kafka |
+| H2 | `application` importing `infrastructure` or `interfaces` |
+| H3 | `infrastructure` and `interfaces` importing each other |
+| H8 | cycles between the layers |
+| H10 | `domain` reading the clock or random sources directly (`Instant.now()`, `UUID.randomUUID()`, `Math.random()`, `System.currentTimeMillis()` and similar); inject a `Clock` or an identifier source instead |
+| Layout | any package under the service root other than the four layers |
+
+H4 is checked by Gradle (see the convention plugins) and H5 to H7 and H9 are not covered by these tests yet.
+
+The rules only check a service that includes the test below: a service that does not add it is not verified. Add it to every new service, whether you started from `sample-service` or not:
+
+```kotlin
+// services/<svc>-service/build.gradle.kts
+dependencies {
+    testImplementation(project(":libs:arch-rules"))
+}
+```
+
+```java
+@AnalyzeClasses(
+    packages = "ec.edu.mentora.<svc>",
+    importOptions = ImportOption.DoNotIncludeTests.class)
+class ArquitecturaHexagonalTest {
+  @ArchTest static final ArchTests hexagonal = ArchTests.in(HexagonalRules.class);
+}
+```
+
+`libs/arch-rules` has its own tests with deliberately broken fixtures, so each rule is proven to fail when it should.
 
 ## Requirements
 
