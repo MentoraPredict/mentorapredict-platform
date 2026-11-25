@@ -77,7 +77,7 @@ A breaking change adds `!` after the scope (`feat(grd)!: ...`) and `BREAKING CHA
 - **Title:** in English and with the same format as a commit: `type(scope): description`. The titles feed the automatic release notes.
 - **Target:** `dev`. Promotions go from `dev` to `qa` and from `qa` to `main`.
 - **Size:** 400 changed lines or fewer; if it is larger, justify the size.
-- **Template:** fill it in completely. In the sections with options (Module, Type of change, Impact) keep only the selected option and delete the rest. In the self-review checklist keep every item.
+- **Template:** fill it in completely. In the sections with options (Module, Type of change, Impact) keep only the selected option and delete the rest. In the self-review checklist keep only the items you checked and delete the rest.
 - **Task:** write the key in "Closes: MPC-NN".
 - **Public repository:** do not push secrets, AWS account IDs or real student data.
 

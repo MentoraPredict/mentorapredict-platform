@@ -4,7 +4,8 @@ Which kind of PR is this?
 - Promotion PR (dev -> qa, qa -> main): fill "PRs Included" and "Changes" (summary level).
 Delete the sections that do not apply, or write "N/A".
 In the sections with options (Module, Type of change, Impact) keep ONLY the
-selected option(s) and delete the rest. In the self-review checklist keep every item.
+selected option(s) and delete the rest. In the self-review checklist keep ONLY the
+items you checked (mark them [x]) and delete the rest.
 -->
 
 ## Summary
@@ -112,6 +113,8 @@ Closes: MPC-
 ---
 
 ## Self-review checklist (DOC-CAL-06)
+
+<!-- Mark [x] each item you verified and keep only those; delete the items that do not apply. -->
 
 - [ ] **Code:** I reviewed the full diff myself; commits follow Conventional Commits in English
 - [ ] **Size:** the PR is small (about 400 changed lines or fewer) or the size is justified (always true for promotions)
