@@ -1,0 +1,10 @@
+# Single version catalog for the whole monorepo.
+# Every service reads its versions from here (libs.versions.<name>).
+# Spring Boot, Spring Cloud and library versions are added with the service template.
+
+[versions]
+java = "21"
+
+[libraries]
+
+[plugins]
