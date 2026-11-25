@@ -122,6 +122,47 @@ git checkout dev
 
 Check the setup with `./gradlew build`. Work branches start from `dev`. Before opening your first pull request, read the [contributing guide](CONTRIBUTING.md).
 
+## Build conventions
+
+Every service and library gets its build setup from a convention plugin in `build-logic/`, so a `build.gradle.kts` only says which kind of project it is:
+
+```kotlin
+// services/grading-service/build.gradle.kts
+plugins {
+    id("mentora.servicio")
+}
+```
+
+| Plugin | Use it in | What it adds |
+| --- | --- | --- |
+| `mentora.servicio` | `services/<svc>-service` | `mentora.calidad`, the Spring Boot plugin and BOM (executable jar), `spring-boot-starter-test`, ArchUnit and the Testcontainers BOM |
+| `mentora.biblioteca` | `libs/*` | `mentora.calidad` and `java-library` (no Spring Boot executable, no business logic: rule H5), JUnit 5, AssertJ and ArchUnit |
+| `mentora.calidad` | applied by the two above; do not use it directly | The shared Java and quality setup described below |
+
+All versions come from `gradle/libs.versions.toml`; do not write a version in a `build.gradle.kts`.
+
+### Quality tools
+
+`mentora.calidad` runs these on every `./gradlew build`; any failure stops the build:
+
+| Tool | What it checks |
+| --- | --- |
+| Java 21 toolchain | Compiles with JDK 21 whatever JDK runs Gradle |
+| `javac` with `-Xlint:all -Werror` | Every compiler warning is an error |
+| Error Prone and NullAway | Common bugs; null safety in packages marked `@NullMarked` (JSpecify) |
+| Spotless (google-java-format) | Code format. Fix it with `./gradlew spotlessApply` |
+| Checkstyle | Style rules in `config/checkstyle/checkstyle.xml`, with zero warnings allowed |
+| SpotBugs | Bug patterns in the compiled code |
+| JUnit 5 and JaCoCo | Tests run on the JUnit platform; JaCoCo writes XML and HTML reports after them |
+
+### Rule H4: services never depend on services
+
+A project can depend only on `libs/*`. If a build file declares `project(":services:...")` (and it is not the project itself), Gradle stops while configuring the build with a message that starts with `Rule H4 violated` and names both projects. There is no flag to skip the check: move the shared code to a library under `libs/` instead.
+
+### JDK 21
+
+Install JDK 21 before building. The Java 21 toolchain finds it on its own (Gradle looks in the usual install folders and in `JAVA_HOME`), so Gradle itself can run on a newer JDK. If no JDK 21 is found, the build fails with a message that lists the toolchains it looked for.
+
 ## Service ownership
 
 Every service belongs to a module (A, B or C).
