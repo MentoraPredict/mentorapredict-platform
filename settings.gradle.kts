@@ -1,3 +1,8 @@
+pluginManagement {
+    // Convention plugins (mentora.servicio, mentora.biblioteca) live in build-logic.
+    includeBuild("build-logic")
+}
+
 rootProject.name = "mentorapredict-services"
 
 // Every folder under services/ and libs/ that has a build.gradle.kts becomes a

@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN" "https://checkstyle.org/dtds/configuration_1_3.dtd">
+<!-- Rule set aligned with DOC-CAL-08 (sections 2.1 and 3.1). Extend it here. -->
+<module name="Checker">
+    <property name="charset" value="UTF-8"/>
+    <property name="severity" value="error"/>
+    <module name="FileTabCharacter"/>
+    <module name="NewlineAtEndOfFile"/>
+    <module name="TreeWalker">
+        <module name="AvoidStarImport"/>
+        <module name="UnusedImports"/>
+        <module name="RedundantImport"/>
+        <module name="ModifierOrder"/>
+        <module name="NeedBraces"/>
+        <module name="EmptyStatement"/>
+        <module name="EqualsHashCode"/>
+        <module name="IllegalImport"/>
+        <module name="UpperEll"/>
+        <!-- Size and complexity limits from DOC-CAL-08 sections 2.1 and 3.1 -->
+        <module name="MethodLength">
+            <property name="max" value="40"/>
+            <property name="countEmpty" value="false"/>
+        </module>
+        <module name="ParameterNumber">
+            <property name="max" value="4"/>
+        </module>
+        <module name="CyclomaticComplexity">
+            <property name="max" value="10"/>
+        </module>
+        <module name="ClassFanOutComplexity">
+            <property name="max" value="7"/>
+        </module>
+        <module name="VisibilityModifier"/>
+    </module>
+    <module name="FileLength">
+        <property name="max" value="400"/>
+    </module>
+</module>

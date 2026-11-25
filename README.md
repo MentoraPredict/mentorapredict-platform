@@ -84,7 +84,8 @@ The prediction supports people, it never replaces them: every alert is explainab
 mentorapredict-services/
 ├── settings.gradle.kts        includes every subproject
 ├── gradle/libs.versions.toml  single version catalog
-├── build-logic/               Gradle convention plugins
+├── build-logic/               Gradle convention plugins (mentora.calidad, mentora.servicio, mentora.biblioteca)
+├── config/checkstyle/         shared Checkstyle rules
 ├── libs/
 │   ├── contracts/             OpenAPI, Avro and gRPC (contracts between services)
 │   └── platform/              multi-tenancy, outbox, observability and errors
@@ -106,8 +107,8 @@ Rules:
 | Tool | Used for |
 | --- | --- |
 | Git | Cloning and working with branches |
-| JDK 21 | Building and running the services |
-| Gradle | Comes with the wrapper (`./gradlew`), added with the service template |
+| JDK 21 | Building and running the services (set `JAVA_HOME` to it) |
+| Gradle | Comes with the wrapper (`./gradlew`); no installation needed |
 | Docker | Local environment with Docker Compose (development only) |
 | Python 3.12 or later and `uv` | `ml/` only |
 
@@ -119,7 +120,7 @@ cd mentorapredict-services
 git checkout dev
 ```
 
-Work branches start from `dev`. Before opening your first pull request, read the [contributing guide](CONTRIBUTING.md).
+Check the setup with `./gradlew build`. Work branches start from `dev`. Before opening your first pull request, read the [contributing guide](CONTRIBUTING.md).
 
 ## Service ownership
 
