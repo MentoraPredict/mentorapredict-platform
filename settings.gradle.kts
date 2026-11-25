@@ -1,4 +1,4 @@
-rootProject.name = "mentorapredict-services"
+rootProject.name = "mentorapredict-platform"
 
 // Every folder under services/ and libs/ that has a build.gradle.kts becomes a
 // Gradle subproject automatically, so adding a service does not touch this file.

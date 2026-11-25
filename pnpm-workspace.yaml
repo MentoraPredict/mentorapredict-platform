@@ -1,0 +1,6 @@
+packages:
+  - clients/web
+  - clients/mobile
+  - clients/desktop
+  - clients/site
+  - clients/packages/*

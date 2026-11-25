@@ -59,3 +59,14 @@ venv/
 *.bak
 *.swp
 /tmp/
+
+# Client apps (clients/): Node, Turborepo, Expo
+node_modules/
+dist/
+.turbo/
+.next/
+.expo/
+coverage/
+*.tsbuildinfo
+npm-debug.log*
+pnpm-debug.log*

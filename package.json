@@ -1,0 +1,17 @@
+{
+  "name": "mentorapredict-platform",
+  "private": true,
+  "description": "MentoraPredict platform monorepo: services (Gradle) and client apps (pnpm + Turborepo)",
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "turbo": "^2.11.13"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "dev": "turbo run dev"
+  }
+}
