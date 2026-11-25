@@ -1,0 +1,42 @@
+name: commitlint
+
+# Validates every commit of a pull request and its title (DOC-GES-09, section 7).
+# Merge commits and GitHub revert commits are ignored by commitlint by default.
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+    branches: [dev, qa, main]
+
+permissions:
+  contents: read
+
+env:
+  COMMITLINT_VERSION: "21.2.4"
+
+jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Lint the commits of the pull request
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          npx --yes \
+            -p "@commitlint/cli@${COMMITLINT_VERSION}" \
+            -p "@commitlint/config-conventional@${COMMITLINT_VERSION}" \
+            commitlint --from "$BASE_SHA" --to "$HEAD_SHA" --verbose
+
+      - name: Lint the title of the pull request
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          printf '%s\n' "$PR_TITLE" | npx --yes \
+            -p "@commitlint/cli@${COMMITLINT_VERSION}" \
+            -p "@commitlint/config-conventional@${COMMITLINT_VERSION}" \
+            commitlint --verbose
