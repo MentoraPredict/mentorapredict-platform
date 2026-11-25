@@ -1,6 +1,6 @@
 # Single version catalog for the whole monorepo.
 # Every service and library reads its versions from here (libs.<name>).
-# Spring Boot 4.2 (DOC-ARQ-13 lists 4.0 as the starting version, to verify).
+# Spring Boot 4.2 is the starting version of the service framework (DOC-ARQ-13 v1.2.1).
 
 [versions]
 java = "21"
