@@ -101,6 +101,10 @@ A breaking change adds `!` after the scope (`feat(grd)!: ...`) and `BREAKING CHA
 
 ## 7. If something goes wrong
 
+- **The `commitlint` check fails:** the check is required in `dev`, `qa` and `main`, so the PR cannot be merged, not even by administrators, until it passes.
+  - *The PR title is wrong:* edit the title in the PR. The check runs again by itself.
+  - *A commit message is wrong:* rewrite it in your work branch (it is not protected) with `git commit --amend` for the last commit or `git rebase -i` for older ones, and push with `git push --force-with-lease`. It must be fixed in the branch because, with merge commits, every commit stays in the history.
+  - *A promotion PR (`dev` to `qa` or `qa` to `main`) fails:* it should not, because each commit was already checked when it entered `dev`. If it happens, ask the owner of your module; history of `dev`, `qa` and `main` is never rewritten.
 - **You merged something wrong:** do not rewrite history. Open a revert PR with `git revert`, titled `revert: ...`.
 - **Your branch is out of date:** bring `dev` into your branch with `git merge origin/dev` and solve the conflicts before opening the PR.
 - **Doubts about a rule:** ask the owner of your module.
