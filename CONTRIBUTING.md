@@ -99,6 +99,8 @@ A breaking change adds `!` after the scope (`feat(grd)!: ...`) and `BREAKING CHA
 2. PR from `qa` to `main`, titled `chore(release): promote qa to main`; the instructor approves it.
 3. In both PRs, fill in the table "PRs Included From Development or QA" with the PRs merged since the last promotion.
 
+The title of a promotion is **always the same**, without a version number: `chore(release)` does not publish by itself, and the version is calculated from the commits being promoted (see section 8). What changes in each promotion is the **body**: the Jira tasks that enter, the table of PRs merged since the last promotion, the summary of changes and, if there are any, the breaking changes. A breaking change is written in the body and in the commits with `!`, never in the title.
+
 ## 7. If something goes wrong
 
 - **The `commitlint` check fails:** the check is required in `dev`, `qa` and `main`, so the PR cannot be merged, not even by administrators, until it passes.
