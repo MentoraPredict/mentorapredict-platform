@@ -29,6 +29,9 @@
         </module>
         <module name="ClassFanOutComplexity">
             <property name="max" value="7"/>
+            <!-- Mapping and configuration annotations are declarations, not coupling to collaborators. -->
+            <property name="excludedPackages"
+                      value="org.springframework.web.bind.annotation,org.springframework.context.annotation,org.springframework.stereotype"/>
         </module>
         <module name="VisibilityModifier"/>
     </module>
