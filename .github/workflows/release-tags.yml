@@ -1,0 +1,39 @@
+name: release-tags
+
+# Creates the tag and the GitHub Release of each publication (DOC-GES-09).
+#   qa   -> release candidate vX.Y.Z-rc.N (pre-release)
+#   main -> stable release vX.Y.Z
+# The version is calculated from the conventional commits since the last stable tag.
+# Run it by hand to force a version (for example 1.0.0).
+
+on:
+  push:
+    branches: [qa, main]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Force the version, for example 1.0.0. Leave empty to calculate it from the commits."
+        required: false
+        type: string
+
+concurrency:
+  group: release-${{ github.ref_name }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Create the tag and the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ github.ref_name }}
+          FORCE_VERSION: ${{ inputs.version }}
+        run: bash .github/scripts/release-tag.sh
