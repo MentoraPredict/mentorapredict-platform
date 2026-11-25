@@ -3,6 +3,8 @@ Which kind of PR is this?
 - Work PR (feat/fix/chore/docs/ci -> dev): fill "Changes". Skip "PRs Included".
 - Promotion PR (dev -> qa, qa -> main): fill "PRs Included" and "Changes" (summary level).
 Delete the sections that do not apply, or write "N/A".
+In the sections with options (Module, Type of change, Impact) keep ONLY the
+selected option(s) and delete the rest. In the self-review checklist keep every item.
 -->
 
 ## Summary
@@ -21,7 +23,7 @@ Closes: MPC-
 
 ## Module
 
-<!-- Module that owns the change (see DOC-GES-08, section 2). Check one; check several only in promotions or shared changes. -->
+<!-- Module that owns the change (see DOC-GES-08, section 2). Keep only the selected option (several only in promotions or shared changes) and delete the others. -->
 
 - [ ] **A**
 - [ ] **B**
@@ -31,6 +33,8 @@ Closes: MPC-
 ---
 
 ## Type of change
+
+<!-- Keep only the selected option and delete the others. -->
 
 - [ ] `feat`: new functionality
 - [ ] `fix`: bug fix
@@ -76,6 +80,8 @@ Closes: MPC-
 ---
 
 ## Impact
+
+<!-- Keep only the selected options and delete the others. If nothing applies, keep only "None of the above". -->
 
 - [ ] Changes an API or event contract (OpenAPI, Avro, gRPC): contract updated and backward compatibility verified
 - [ ] Changes a database schema or migration: migration is reversible (or expand/contract)
