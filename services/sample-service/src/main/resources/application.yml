@@ -1,0 +1,35 @@
+# Common configuration of every environment. The environment is chosen with the Spring profile
+# (SPRING_PROFILES_ACTIVE=dev|qa|prod), which loads application-<profile>.yml on top of this file.
+#
+# This repository is public: never write passwords, tokens or AWS account IDs in these files.
+# Sensitive values come from environment variables, for example: password: ${DB_PASSWORD}
+
+spring:
+  application:
+    name: sample-service
+  threads:
+    virtual:
+      enabled: true # Java 21 virtual threads
+
+# Health checks (DOC-INF-03 section 5.4). They are operational routes for the platform, not part
+# of the business API, so they have no /v1 prefix.
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info # nothing else is reachable over HTTP
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never
+      show-components: never
+      group:
+        # liveness: "is the process stuck?". It must not check the database or other services,
+        # so an external failure does not restart the pods.
+        liveness:
+          include: livenessState
+        # readiness: "can it receive traffic?". Add here the dependencies the service needs
+        # (database pool, broker) when they arrive (MPC-115, MPC-116).
+        readiness:
+          include: readinessState

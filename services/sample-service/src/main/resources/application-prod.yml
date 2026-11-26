@@ -1,0 +1,7 @@
+# Production. Only the necessary logs.
+mentora:
+  environment: prod
+
+logging:
+  level:
+    ec.edu.mentora: INFO

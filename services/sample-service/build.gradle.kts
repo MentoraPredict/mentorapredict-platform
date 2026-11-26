@@ -4,6 +4,8 @@ plugins {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
+    // Health checks for the platform (liveness and readiness).
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
 
     // A service may depend on libs/* only (rule H4).
     testImplementation(project(":libs:arch-rules"))
