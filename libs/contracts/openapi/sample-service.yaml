@@ -1,0 +1,108 @@
+# Contract first (DOC-ARQ-09 section 8): this file is written and reviewed before the code.
+# The build generates the Java interfaces and DTOs of the server from it.
+# Descriptions are written in Spanish, as DOC-ARQ-09 requires.
+openapi: 3.1.0
+info:
+  title: Servicio de muestra
+  version: 1.0.0
+  description: Contrato de ejemplo de la plantilla de servicios. Se reemplaza por el de cada servicio.
+servers:
+  - url: /
+tags:
+  - name: muestras
+    description: Recurso de ejemplo
+paths:
+  /v1/muestras/{muestraId}:
+    parameters:
+      - name: muestraId
+        in: path
+        required: true
+        description: Identificador de la muestra
+        schema:
+          type: string
+    get:
+      tags: [muestras]
+      operationId: obtenerMuestra
+      summary: Consulta una muestra
+      responses:
+        "200":
+          description: La muestra
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MuestraResponse"
+        "404":
+          $ref: "#/components/responses/Error"
+    put:
+      tags: [muestras]
+      operationId: registrarMuestra
+      summary: Registra una muestra; repetir la petición con el mismo identificador la reemplaza
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MuestraRequest"
+      responses:
+        "200":
+          description: La muestra registrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MuestraResponse"
+        "400":
+          $ref: "#/components/responses/Error"
+components:
+  schemas:
+    MuestraRequest:
+      type: object
+      description: Datos para registrar una muestra
+      additionalProperties: false
+      required: [nombre]
+      properties:
+        nombre:
+          type: string
+          description: Nombre de la muestra; no puede estar en blanco
+          pattern: ".*\\S.*"
+    MuestraResponse:
+      type: object
+      description: Una muestra registrada
+      additionalProperties: false
+      required: [id, nombre, registradaEn]
+      properties:
+        id:
+          type: string
+          description: Identificador de la muestra
+        nombre:
+          type: string
+          description: Nombre de la muestra
+        registradaEn:
+          type: string
+          format: date-time
+          description: Instante del registro en UTC (RFC 3339)
+    Problema:
+      type: object
+      description: Error en formato problem+json (RFC 9457)
+      properties:
+        type:
+          type: string
+          description: Identificador del tipo de error
+        title:
+          type: string
+          description: Resumen del error
+        status:
+          type: integer
+          description: Código de estado HTTP
+        detail:
+          type: string
+          description: Explicación del error, sin trazas ni datos personales
+        instance:
+          type: string
+          description: Ruta de la petición que falló
+  responses:
+    Error:
+      description: Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problema"

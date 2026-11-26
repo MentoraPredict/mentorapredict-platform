@@ -46,4 +46,10 @@ class MuestraApiTest {
                 .content("{\"nombre\":\" \"}"))
         .andExpect(status().isBadRequest());
   }
+
+  @Test
+  void unaPeticionSinNombreIncumpleElContratoYDevuelve400() throws Exception {
+    mvc.perform(put("/v1/muestras/m-3").contentType(MediaType.APPLICATION_JSON).content("{}"))
+        .andExpect(status().isBadRequest());
+  }
 }

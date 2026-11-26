@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Code generated from the OpenAPI contracts is not ours to fix. -->
+<FindBugsFilter>
+    <Match>
+        <Package name="~ec\.edu\.mentora\.[^.]+\.interfaces\.rest\..*"/>
+    </Match>
+</FindBugsFilter>

@@ -5,6 +5,9 @@
 # Sensitive values come from environment variables, for example: password: ${DB_PASSWORD}
 
 spring:
+  mvc:
+    problemdetails:
+      enabled: true # errors as application/problem+json (DOC-ARQ-09)
   application:
     name: sample-service
   threads:
