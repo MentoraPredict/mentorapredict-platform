@@ -1,0 +1,13 @@
+# The unit and component tests of `./gradlew build` run without Docker, so they start the service
+# without a database. It is added on top of the application.yml of the service (it does not replace
+# it). The database is tested with real PostgreSQL in src/integrationTest.
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration
+      - org.springframework.boot.flyway.autoconfigure.FlywayAutoConfiguration
+
+management:
+  endpoint:
+    health:
+      validate-group-membership: false # there is no "db" indicator without a database
