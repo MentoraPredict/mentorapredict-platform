@@ -1,11 +1,12 @@
 <!--
 Which kind of PR is this?
-- Work PR (feat/fix/chore/docs/ci -> dev): fill "Changes". Skip "PRs Included".
-- Promotion PR (dev -> qa, qa -> main): fill "PRs Included" and "Changes" (summary level).
-Delete the sections that do not apply, or write "N/A".
+- Work PR (feat/fix/chore/docs/ci -> dev): fill "Commits Included" and "Changes". Skip "PRs Included".
+- Promotion PR (dev -> qa, qa -> main): fill "PRs Included" and "Changes" (summary level). Skip "Commits Included".
+Delete, with their heading, the sections that do not apply or have nothing to say.
+Never leave a section with only "N/A" or "None".
 In the sections with options (Module, Type of change, Impact) keep ONLY the
-selected option(s) and delete the rest. In the self-review checklist keep ONLY the
-items you checked (mark them [x]) and delete the rest.
+selected option(s) and delete the rest.
+Before opening the PR, see the self-review recommendations in CONTRIBUTING.md, section 5.
 -->
 
 ## Summary
@@ -47,9 +48,20 @@ Closes: MPC-
 
 ---
 
+## Commits Included
+
+<!-- Required in work PRs; delete this section in promotion PRs. One row per commit of the branch (merge commits are not listed). Last column: the subtask of the "Refs:" footer or, without it, the key of the task. CONTRIBUTING.md, section 4, has the command that prints the rows. Update the table if you push more commits. -->
+
+| Commit | Title | Author | Jira subtask or task |
+| --- | --- | --- | --- |
+|        |       |        | MPC- |
+|        |       |        | MPC- |
+
+---
+
 ## PRs Included From Development or QA
 
-<!-- Required in promotion PRs. Leave "N/A" in work PRs. One row per PR merged since the last promotion. -->
+<!-- Required in promotion PRs; delete this section in work PRs. One row per PR merged since the last promotion. -->
 
 | PR | Title | Author | Jira | Service or area |
 | --- | --- | --- | --- | --- |
@@ -60,7 +72,7 @@ Closes: MPC-
 
 ## Changes
 
-<!-- One bullet per relevant change, grouped by service or folder if the PR touches several. -->
+<!-- Required. Describe the changes that were applied, not only the title or the commit list. Use bullet lists, subheadings (for example one per service or subtask), paragraphs or a mix, whatever explains them best. -->
 
 - 
 - 
@@ -70,7 +82,7 @@ Closes: MPC-
 
 ## Important Breaking / Behavioral Changes (optional)
 
-<!-- Only if something changes for other people or systems: removed or renamed API fields, new required configuration or environment variables, changed defaults, migrations that need to run in order, different behavior for users. Describe what changes and how to adapt. Write "None" otherwise. -->
+<!-- Only if something changes for other people or systems: removed or renamed API fields, new required configuration or environment variables, changed defaults, migrations that need to run in order, different behavior for users. Describe what changes and how to adapt. Delete this section otherwise. -->
 
 - [ ] Breaking change (`!` in the title and `BREAKING CHANGE:` in the commit footer)
 
@@ -82,13 +94,12 @@ Closes: MPC-
 
 ## Impact
 
-<!-- Keep only the selected options and delete the others. If nothing applies, keep only "None of the above". -->
+<!-- Keep only the selected options and delete the others. If nothing applies, delete this section. -->
 
 - [ ] Changes an API or event contract (OpenAPI, Avro, gRPC): contract updated and backward compatibility verified
 - [ ] Changes a database schema or migration: migration is reversible (or expand/contract)
 - [ ] Touches personal data: none in logs, metrics or traces, and access is audited
 - [ ] Changes infrastructure, pipeline or Helm chart
-- [ ] None of the above
 
 ---
 
@@ -109,21 +120,6 @@ Closes: MPC-
 ## Screenshots or evidence (optional)
 
 <!-- Only if there is a visible change. Remove personal data, secrets and tokens first: this repository is public. -->
-
----
-
-## Self-review checklist (DOC-CAL-06)
-
-<!-- Mark [x] each item you verified and keep only those; delete the items that do not apply. -->
-
-- [ ] **Code:** I reviewed the full diff myself; commits follow Conventional Commits in English
-- [ ] **Size:** the PR is small (about 400 changed lines or fewer) or the size is justified (always true for promotions)
-- [ ] **Tests:** unit tests of the domain and, if it touches another service, integration or contract tests; all pass
-- [ ] **Contract:** if a route or event changes, the OpenAPI is updated
-- [ ] **Security:** routes require session and role, there is a negative test, and no secrets, AWS account IDs or real data
-- [ ] **Environment:** works with the single startup command and the seeds
-- [ ] **Acceptance:** the acceptance criterion of the requirement (`RF-...`) was checked
-- [ ] **Documentation:** if the behavior changes, the owner document was updated
 
 ---
 
