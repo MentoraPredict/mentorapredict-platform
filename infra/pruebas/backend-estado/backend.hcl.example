@@ -1,0 +1,6 @@
+bucket       = "replace-with-existing-bucket"
+key          = "pruebas/backend-estado/terraform.tfstate"
+region       = "us-east-1"
+encrypt      = true
+kms_key_id   = "alias/mp-staging-estado-iac"
+use_lockfile = true

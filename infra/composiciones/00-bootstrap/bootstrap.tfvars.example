@@ -1,0 +1,8 @@
+region        = "us-east-1"
+nombre_bucket = "replace-with-a-globally-unique-bucket-name"
+alias_clave   = "alias/mp-staging-estado-iac"
+etiquetas = {
+  entorno        = "staging"
+  modulo         = "a"
+  gestionado-por = "terraform"
+}
