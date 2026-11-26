@@ -2,6 +2,14 @@
 mentora:
   environment: dev
 
+# Defaults that match compose.yml and infra/local/postgres/01-roles.sql. They are development
+# values, not secrets. The environment variables override them. qa and prod have no defaults.
+DB_URL: jdbc:postgresql://localhost:${POSTGRES_PORT:5432}/${POSTGRES_DB:mentora}
+DB_USER: svc_app
+DB_PASSWORD: svc_app
+DB_MIGRATION_USER: svc_migrator
+DB_MIGRATION_PASSWORD: svc_migrator
+
 logging:
   level:
     ec.edu.mentora: DEBUG

@@ -9,16 +9,19 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     // Health checks for the platform (liveness and readiness).
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    // PostgreSQL, with Flyway applying the migrations of src/main/resources/db/migration at startup.
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    implementation("org.springframework.boot:spring-boot-starter-flyway")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql")
+    runtimeOnly("org.postgresql:postgresql")
 
     // A service may depend on libs/* only (rule H4).
     testImplementation(project(":libs:arch-rules"))
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 
-    // The integration tests (./gradlew integrationTest) use PostgreSQL and Kafka. These clients are
-    // only on their classpath for now; they move to `implementation` with MPC-115 and MPC-116.
-    "integrationTestImplementation"("org.springframework.boot:spring-boot-starter-jdbc")
+    // The integration tests (./gradlew integrationTest) also use Kafka. Its client is only on their
+    // classpath for now; it moves to `implementation` with MPC-116.
     "integrationTestImplementation"("org.springframework.boot:spring-boot-starter-kafka")
-    "integrationTestRuntimeOnly"("org.postgresql:postgresql")
 }
 
 // Contract first: the server interfaces and DTOs are generated from the contract of this service.

@@ -184,11 +184,11 @@ Check the setup with `./gradlew build`. Work branches start from `dev`. Before o
 
 ```bash
 docker compose up -d                          # PostgreSQL on localhost:5432 and Kafka on localhost:9092
-./gradlew :services:sample-service:bootRun    # start a service
+./gradlew :services:sample-service:bootRun --args="--spring.profiles.active=dev"
 docker compose down                           # stop them (add -v to delete the data too)
 ```
 
-The values in `compose.yml` are for local development only and are not secrets (user, password and database are all `mentora`). To change a port or a value, copy `.env.example` to `.env`; `.env` is ignored by git. Never commit real passwords: **this repository is public**.
+`sample-service` needs the database to start, so run it with the `dev` profile (see below). The values in `compose.yml` are for local development only and are not secrets (administrator, password and database are all `mentora`; the roles of the service are in [Database migrations](#database-migrations)). To change a port or a value, copy `.env.example` to `.env`; `.env` is ignored by git. Never commit real passwords: **this repository is public**.
 
 ### Integration tests with Testcontainers
 
@@ -198,7 +198,7 @@ Unit and component tests run with `./gradlew build` and do not need Docker. Test
 ./gradlew integrationTest
 ```
 
-[Testcontainers](https://testcontainers.com) starts a throwaway PostgreSQL and Kafka from the test itself, on random ports, and removes them when it finishes. `@ServiceConnection` points Spring Boot at them, so there is nothing to configure and they do not clash with the containers of `compose.yml`. The `mentora.servicio` plugin sets up the `integrationTest` source set and the Testcontainers dependencies; `services/sample-service` shows how to use them (`ContenedoresConfig` and `InfraestructuraLocalIT`). They are not part of `./gradlew build` on purpose, so a clone with only JDK 21 still builds. The CI pipeline will need to run `integrationTest` too (the G1 gate is a separate task).
+[Testcontainers](https://testcontainers.com) starts a throwaway PostgreSQL and Kafka from the test itself, on random ports, and removes them when it finishes. There is nothing to configure and they do not clash with the containers of `compose.yml`: Kafka uses `@ServiceConnection`, and PostgreSQL gets the same roles as `compose.yml`, so the tests run with the restricted role of the service. The `mentora.servicio` plugin sets up the `integrationTest` source set and the Testcontainers dependencies; `services/sample-service` shows how to use them (`PruebaDeIntegracion`, `PostgresPorRoles`, `ContenedoresConfig` and the `*IT` classes). They are not part of `./gradlew build` on purpose, so a clone with only JDK 21 still builds. The CI pipeline will need to run `integrationTest` too (the G1 gate is a separate task).
 
 ## Configuration and health checks
 
@@ -219,6 +219,39 @@ No profile is active by default. **This repository is public**: never write pass
 | `/actuator/health/readiness` | Can it receive traffic? Add here the dependencies the service cannot work without |
 
 Only `health` and `info` are exposed over HTTP, and health shows no details. Keep it that way: other Actuator endpoints, such as `env` or `heapdump`, can reveal secrets or data.
+
+## Database migrations
+
+[Flyway](https://documentation.red-gate.com/flyway) applies the pending migrations when the service starts. It works the same on the local PostgreSQL and on RDS or Aurora PostgreSQL (not yet tested against them).
+
+**Convention**
+
+- Scripts live in `src/main/resources/db/migration` and are named `V<n>__descripcion.sql` (two underscores, `n` is the next number). A badly named script stops the startup.
+- **Never edit a migration that was already applied** anywhere: add a new one. Flyway compares checksums and stops if one changed.
+- During a deployment the old and the new version of the service run at the same time, so use **expand/contract**: first add what is new (compatible with the old code), then move the data and the code, and remove the old part in a later release. Never rename or drop a column in one step.
+- There is no automatic undo: a problem is fixed with a new migration. Try it in QA first. `flyway clean` is disabled.
+- The outbox table arrives with MPC-116.
+
+**Every table with data of an institution** (rule H7, DOC-ARQ-06 section 5) has `tenant_id uuid NOT NULL`, includes it in its primary and foreign keys, enables **and forces** row-level security with a policy, and grants privileges to `svc_app`. Copy `V1__crear_tabla_muestra.sql`. `MigracionesIT` fails if a table is missing this protection. The service sets the institution in each transaction with `set_config('app.tenant_id', ?, true)`; without it no row is visible. The shared institution context arrives with MPC-391.
+
+**Two database roles**
+
+| Role | Used by | Can |
+| --- | --- | --- |
+| `svc_migrator` | Flyway only | Create and change tables |
+| `svc_app` | The running service | Read and write rows; it cannot skip row-level security |
+
+Never run the service as a superuser or as a role with `BYPASSRLS`: row-level security would not protect anything.
+
+| Variable | Meaning |
+| --- | --- |
+| `DB_URL`, `DB_USER`, `DB_PASSWORD` | Connection of the service |
+| `DB_MIGRATION_USER`, `DB_MIGRATION_PASSWORD` | Connection of Flyway |
+| `DB_MIGRATION_URL` | Optional, `DB_URL` by default. Point it directly at the writer instance when the service goes through PgBouncer |
+
+The `dev` profile has defaults that match `compose.yml`; `qa` and `prod` have none. Locally, the roles are created by `infra/local/postgres/01-roles.sql` only when the database is new. **If you started the database before these roles existed**, recreate it once with `docker compose down -v` (this deletes your local data).
+
+`./gradlew build` still works without Docker: those tests start the service without a database (`src/test/resources/config/application.yml`). The migrations and the isolation between institutions are tested by `./gradlew integrationTest`.
 
 ## Build conventions
 

@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** Output adapter that keeps the samples in memory. The real database arrives with MPC-115. */
+/** Output adapter that keeps the samples in memory. It moves to the database with MPC-391. */
 public final class MuestraEnMemoriaRepository implements MuestraRepositoryPort {
 
   private final Map<String, Muestra> muestras = new ConcurrentHashMap<>();

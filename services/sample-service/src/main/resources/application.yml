@@ -13,6 +13,19 @@ spring:
   threads:
     virtual:
       enabled: true # Java 21 virtual threads
+  # Two database roles (DOC-ARQ-06 section 5.2). The service runs with a role that cannot skip
+  # row-level security; only Flyway uses the role that changes tables.
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  flyway:
+    # Direct connection to the writer instance: do not go through PgBouncer in transaction mode.
+    url: ${DB_MIGRATION_URL:${DB_URL}}
+    user: ${DB_MIGRATION_USER}
+    password: ${DB_MIGRATION_PASSWORD}
+    clean-disabled: true # `flyway clean` deletes the database objects
+    validate-migration-naming: true # a badly named script stops the startup
 
 # Health checks (DOC-INF-03 section 5.4). They are operational routes for the platform, not part
 # of the business API, so they have no /v1 prefix.
@@ -32,7 +45,7 @@ management:
         # so an external failure does not restart the pods.
         liveness:
           include: livenessState
-        # readiness: "can it receive traffic?". Add here the dependencies the service needs
-        # (database pool, broker) when they arrive (MPC-115, MPC-116).
+        # readiness: "can it receive traffic?". It includes the dependencies the service cannot
+        # work without: the database now, the broker with MPC-116.
         readiness:
-          include: readinessState
+          include: readinessState,db
