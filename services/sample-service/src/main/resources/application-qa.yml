@@ -1,0 +1,7 @@
+# Testing environment, before production.
+mentora:
+  environment: qa
+
+logging:
+  level:
+    ec.edu.mentora: INFO

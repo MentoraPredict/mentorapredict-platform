@@ -200,6 +200,26 @@ Unit and component tests run with `./gradlew build` and do not need Docker. Test
 
 [Testcontainers](https://testcontainers.com) starts a throwaway PostgreSQL and Kafka from the test itself, on random ports, and removes them when it finishes. `@ServiceConnection` points Spring Boot at them, so there is nothing to configure and they do not clash with the containers of `compose.yml`. The `mentora.servicio` plugin sets up the `integrationTest` source set and the Testcontainers dependencies; `services/sample-service` shows how to use them (`ContenedoresConfig` and `InfraestructuraLocalIT`). They are not part of `./gradlew build` on purpose, so a clone with only JDK 21 still builds. The CI pipeline will need to run `integrationTest` too (the G1 gate is a separate task).
 
+## Configuration and health checks
+
+`services/sample-service` shows how every service is configured. `src/main/resources/application.yml` holds what is common to all environments (including Java 21 virtual threads), and `application-dev.yml`, `application-qa.yml` and `application-prod.yml` add or replace values for each one. Choose the environment with the Spring profile, either with the `SPRING_PROFILES_ACTIVE` variable or like this:
+
+```bash
+./gradlew :services:sample-service:bootRun --args="--spring.profiles.active=dev"
+```
+
+No profile is active by default. **This repository is public**: never write passwords, tokens or AWS account IDs in these files; sensitive values come from environment variables, such as `${DB_PASSWORD}`.
+
+[Spring Boot Actuator](https://docs.spring.io/spring-boot/reference/actuator/) provides the health checks (DOC-INF-03 section 5.4). They are routes for the platform, not part of the business API, so they have no `/v1` prefix:
+
+| Route | Question it answers |
+| --- | --- |
+| `/actuator/health` | Is the service healthy? |
+| `/actuator/health/liveness` | Is the process still working? It never checks the database or other services |
+| `/actuator/health/readiness` | Can it receive traffic? Add here the dependencies the service cannot work without |
+
+Only `health` and `info` are exposed over HTTP, and health shows no details. Keep it that way: other Actuator endpoints, such as `env` or `heapdump`, can reveal secrets or data.
+
 ## Build conventions
 
 Every service and library gets its build setup from a convention plugin in `build-logic/`, so a `build.gradle.kts` only says which kind of project it is:

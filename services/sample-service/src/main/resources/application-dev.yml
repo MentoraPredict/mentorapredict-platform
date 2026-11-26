@@ -1,0 +1,7 @@
+# Your machine. More log detail to debug.
+mentora:
+  environment: dev
+
+logging:
+  level:
+    ec.edu.mentora: DEBUG
