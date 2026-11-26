@@ -89,7 +89,7 @@ mentorapredict-services/
 ├── libs/
 │   ├── contracts/             OpenAPI, Avro and gRPC (contracts between services)
 │   ├── arch-rules/            ArchUnit rules of the hexagonal architecture (H1, H2, H3, H8, H10)
-│   └── platform/              multi-tenancy, outbox, observability and errors
+│   └── platform/              reserved for shared technical code (empty for now)
 ├── services/<svc>-service/    one Gradle subproject per service (29)
 ├── ml/                        risk inference and data analysis (Python)
 ├── extensions/keycloak-spi/   Keycloak extensions
@@ -105,7 +105,9 @@ Rules:
 
 ### Service layout and architecture tests
 
-Every service uses the same hexagonal layout under `ec.edu.mentora.<svc>`. `services/sample-service` is a working example of it: you can copy it to start a service, but you do not have to. You can also create the folders by hand or in your IDE, as long as the layout below is respected:
+The [services index](services/README.md) describes every service. To create one from the template, follow [Creating a new service](services/CREATING-A-SERVICE.md).
+
+The template uses this hexagonal layout under `ec.edu.mentora.<svc>`. `services/sample-service` is a working example of it: you can copy it to start a service, but you do not have to. You can also create the folders by hand or in your IDE, as long as the layout below is respected:
 
 ```text
 ec.edu.mentora.<svc>/
@@ -230,9 +232,9 @@ Only `health` and `info` are exposed over HTTP, and health shows no details. Kee
 - **Never edit a migration that was already applied** anywhere: add a new one. Flyway compares checksums and stops if one changed.
 - During a deployment the old and the new version of the service run at the same time, so use **expand/contract**: first add what is new (compatible with the old code), then move the data and the code, and remove the old part in a later release. Never rename or drop a column in one step.
 - There is no automatic undo: a problem is fixed with a new migration. Try it in QA first. `flyway clean` is disabled.
-- The outbox table arrives with MPC-116.
+- The template does not include an outbox table.
 
-**Every table with data of an institution** (rule H7, DOC-ARQ-06 section 5) has `tenant_id uuid NOT NULL`, includes it in its primary and foreign keys, enables **and forces** row-level security with a policy, and grants privileges to `svc_app`. Copy `V1__crear_tabla_muestra.sql`. `MigracionesIT` fails if a table is missing this protection. The service sets the institution in each transaction with `set_config('app.tenant_id', ?, true)`; without it no row is visible. The shared institution context arrives with MPC-391.
+**Every table with data of an institution** (rule H7, DOC-ARQ-06 section 5) has `tenant_id uuid NOT NULL`, includes it in its primary and foreign keys, enables **and forces** row-level security with a policy, and grants privileges to `svc_app`. Copy `V1__crear_tabla_muestra.sql`. `MigracionesIT` fails if a table is missing this protection. The service sets the institution in each transaction with `set_config('app.tenant_id', ?, true)`; without it no row is visible. The template has no shared institution context: each service implements this in its repositories.
 
 **Two database roles**
 
@@ -296,7 +298,7 @@ Install JDK 21 before building. The Java 21 toolchain finds it on its own (Gradl
 
 ## Service ownership
 
-Every service belongs to a module (A, B or C).
+Every service belongs to a module (A, B or C). What each one does is in the [services index](services/README.md).
 
 | Module | Services |
 | --- | --- |

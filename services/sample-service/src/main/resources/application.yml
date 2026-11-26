@@ -46,6 +46,6 @@ management:
         liveness:
           include: livenessState
         # readiness: "can it receive traffic?". It includes the dependencies the service cannot
-        # work without: the database now, the broker with MPC-116.
+        # work without: here, the database. Add the broker if yours needs it.
         readiness:
           include: readinessState,db

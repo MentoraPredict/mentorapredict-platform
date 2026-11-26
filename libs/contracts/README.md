@@ -26,4 +26,4 @@ The sample is simplified: it does not use UUID v7 identifiers or `ETag`/`If-Matc
 
 ## Events
 
-`avro/mp.smp.muestra.v1.avdl` is the example event. Topics are named `mp.<svc>.<aggregate>.v<N>`. The Java classes are not generated yet: that arrives with the outbox (MPC-116), which will also be the first compile check of the schema. The common event envelope belongs to MPC-133, and the compatibility checks in CI to MPC-135.
+`avro/mp.smp.muestra.v1.avdl` is the example event. Topics are named `mp.<svc>.<aggregate>.v<N>`. The template does not generate Java classes from it, so the schema has not been compiled yet. The common event envelope belongs to MPC-133, and the compatibility checks in CI to MPC-135.

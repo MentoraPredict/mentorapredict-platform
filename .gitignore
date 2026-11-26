@@ -8,6 +8,8 @@ build/
 *.log
 hs_err_pid*
 out/
+# "out" is also a source package: the output ports of the hexagonal layout (application.port.out).
+!**/src/**/out/
 
 # IDEs
 .idea/

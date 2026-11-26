@@ -20,7 +20,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 
     // The integration tests (./gradlew integrationTest) also use Kafka. Its client is only on their
-    // classpath for now; it moves to `implementation` with MPC-116.
+    // classpath: move it to `implementation` when the service uses Kafka.
     "integrationTestImplementation"("org.springframework.boot:spring-boot-starter-kafka")
 }
 
