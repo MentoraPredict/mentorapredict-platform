@@ -1,0 +1,20 @@
+// Example event of the template: EVT-SMP-MuestraRegistrada, topic mp.smp.muestra.v1
+// (names and format: DOC-ARQ-05 sections 3.2 and 3.3).
+//
+// It only describes the payload ("data"). The common envelope (id, type, tenantid, ...) is defined
+// by DOC-ARQ-05 section 3.1 and its implementation belongs to MPC-133.
+// Evolution (DOC-ARQ-05 section 5): new fields must be optional with a default value; renaming a
+// field or changing its type needs a new topic version.
+@namespace("mentora.smp.v1")
+protocol MuestraEvents {
+
+  /** A sample was registered. No personal data. */
+  record MuestraRegistrada {
+    /** Identifier of the sample. */
+    string id;
+    /** Name of the sample. */
+    string nombre;
+    /** Instant at which the sample was registered, in UTC. */
+    timestamp_ms registradaEn;
+  }
+}
