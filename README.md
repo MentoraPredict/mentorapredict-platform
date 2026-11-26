@@ -178,6 +178,28 @@ git checkout dev
 
 Check the setup with `./gradlew build`. Work branches start from `dev`. Before opening your first pull request, read the [contributing guide](CONTRIBUTING.md).
 
+## Local environment
+
+`compose.yml` starts the infrastructure a service needs on your machine: PostgreSQL 17 and Kafka (single node, KRaft). You need Docker running. The group is named `mentora-local` and its containers `mentora-postgres` and `mentora-kafka`, so you do not need `-p` or any other option: `docker compose up -d` is enough.
+
+```bash
+docker compose up -d                          # PostgreSQL on localhost:5432 and Kafka on localhost:9092
+./gradlew :services:sample-service:bootRun    # start a service
+docker compose down                           # stop them (add -v to delete the data too)
+```
+
+The values in `compose.yml` are for local development only and are not secrets (user, password and database are all `mentora`). To change a port or a value, copy `.env.example` to `.env`; `.env` is ignored by git. Never commit real passwords: **this repository is public**.
+
+### Integration tests with Testcontainers
+
+Unit and component tests run with `./gradlew build` and do not need Docker. Tests that need a real database or broker live in `src/integrationTest` of the service and run with:
+
+```bash
+./gradlew integrationTest
+```
+
+[Testcontainers](https://testcontainers.com) starts a throwaway PostgreSQL and Kafka from the test itself, on random ports, and removes them when it finishes. `@ServiceConnection` points Spring Boot at them, so there is nothing to configure and they do not clash with the containers of `compose.yml`. The `mentora.servicio` plugin sets up the `integrationTest` source set and the Testcontainers dependencies; `services/sample-service` shows how to use them (`ContenedoresConfig` and `InfraestructuraLocalIT`). They are not part of `./gradlew build` on purpose, so a clone with only JDK 21 still builds. The CI pipeline will need to run `integrationTest` too (the G1 gate is a separate task).
+
 ## Build conventions
 
 Every service and library gets its build setup from a convention plugin in `build-logic/`, so a `build.gradle.kts` only says which kind of project it is:
