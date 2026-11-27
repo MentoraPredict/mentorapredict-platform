@@ -1,0 +1,12 @@
+{
+  "type": "record",
+  "name": "ModuloActivado",
+  "namespace": "mentora.ten.v1",
+  "doc": "Payload of EVT-TEN-ModuloActivado. Parameters must not contain secrets or sensitive data.",
+  "fields": [
+    {"name": "tenantId", "type": {"type": "string", "logicalType": "uuid"}},
+    {"name": "modulo", "type": "string"},
+    {"name": "fechaInicio", "type": {"type": "int", "logicalType": "date"}},
+    {"name": "parametros", "type": {"type": "map", "values": "string"}}
+  ]
+}
