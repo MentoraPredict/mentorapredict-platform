@@ -124,6 +124,10 @@ activation/deactivation topics are compacted by key.
 - [`tenant-module-activated-v1.avsc`](avro/tenant-module-activated-v1.avsc)
 - [`tenant-module-deactivated-v1.avsc`](avro/tenant-module-deactivated-v1.avsc)
 
+Each schema was parsed and used to encode and decode an example payload with
+Apache Avro 1.12.2. This check does not establish schema evolution compatibility,
+validate the common envelope or replace consumer review and integration tests.
+
 The following proposed names use `camelCase` in `data` to match the event
 catalogue; the common envelope already contains `tenantid`. If the payload also
 contains `tenantId`, producer and consumer must verify that both values match.

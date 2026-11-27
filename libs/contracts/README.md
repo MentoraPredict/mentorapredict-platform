@@ -27,3 +27,23 @@ The sample is simplified: it does not use UUID v7 identifiers or `ETag`/`If-Matc
 ## Events
 
 `avro/mp.smp.muestra.v1.avdl` is the example event. Topics are named `mp.<svc>.<aggregate>.v<N>`. The template does not generate Java classes from it, so the schema has not been compiled yet. The common event envelope belongs to MPC-133, and the compatibility checks in CI to MPC-135.
+
+## Identity and institution contracts (MPC-101)
+
+The following files are available in this repository for review. They are not
+yet an approved cross-module contract or a deployed schema registry:
+
+- [Identity and institution contract notes](identity-tenant-proposal.md):
+  claims, events, decisions and outstanding questions.
+- [Access token claims schema v1](identity/access-token-v1.schema.json): JSON
+  Schema for the shape of decoded JWT claims; it does not verify a JWT or grant access.
+- [Role catalogue v1](identity/roles-v1.md): base roles and custom-role identifiers.
+- [Institution created v1](avro/tenant-institution-created-v1.avsc),
+  [module activated v1](avro/tenant-module-activated-v1.avsc), and
+  [module deactivated v1](avro/tenant-module-deactivated-v1.avsc): Avro schemas
+  for event payloads, without the common envelope.
+
+MPC-138 tracks review with modules B and C. Topic names and partition-key
+encoding remain to be agreed. The common event envelope and automated
+compatibility checks remain in MPC-133 and MPC-135. The `v1` file names identify
+the proposed major version; they do not mean compatibility checks are active.
