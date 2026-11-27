@@ -33,6 +33,12 @@ Do not interpret absence of an agreed rule as authorization.
 These are proposals for access tokens, not verified Keycloak configuration.
 Presence rules for platform-only and pre-institution-selection flows require
 agreement before implementation. The audience may be a string or an array.
+The proposed decoded-claims schema is [access-token-v1.schema.json](identity/access-token-v1.schema.json).
+It checks structure only; it is not a JWT verifier and does not grant access.
+The schema passed Draft 2020-12 meta-validation and structural examples for an
+institution token, a platform token, a missing issuer, a non-array `roles` and
+an empty audience. These checks do not enforce contextual `tid` rules, forbid
+extra personal-data claims, validate signatures, check expiry or authorize roles.
 
 | Claim               | Proposed JSON type         | Proposed presence                                                               |
 | ------------------- | -------------------------- | ------------------------------------------------------------------------------- |
@@ -52,6 +58,13 @@ audience or expired token. `tid` must not be taken from an untrusted request
 parameter in place of the validated token context. Session revocation and
 gateway behavior require a separate implementation decision and test.
 
+Proposed context rules: institution routes require exactly one non-empty `tid`
+and evaluate institution roles in that context. Platform administration routes
+must reject an institution `tid` and evaluate platform roles separately. Neither
+rule is established by JSON Schema alone: enforcement belongs to the gateway
+and services. Tokens without a selected institution are not automatically
+authorized for institution routes; the pre-selection flow still needs design.
+
 ## Roles
 
 The actor catalogue describes institution roles such as administrator,
@@ -60,12 +73,18 @@ counsellor and financial staff, as well as platform administrator, support and
 regulatory management. A tutor is a teacher with an assignment; auditor is not
 an active role. The catalogue also identifies a technical-education coordinator.
 
-The exact machine-readable role codes, scopes, assignment rules and treatment of
-custom roles still need agreement with the consuming modules. Actor identifiers
+The machine-readable role codes, scopes and assignment rules still need review
+with the consuming modules. Custom roles use `CUSTOM:<uuid>` in `roles`; their
+name and permissions are resolved from the authorized role catalogue and must
+be scoped to the validated institution. Actor identifiers
 are not automatically role codes. Privileged roles require explicit assignment;
 external group mapping alone must not grant them.
 
 ### Codes found in existing documentation
+
+The [role catalogue](identity/roles-v1.md) distinguishes documented codes from
+codes proposed and accepted by the user. Review with modules B and C remains
+pending; these roles are not yet confirmed to be configured in Keycloak.
 
 `ADM`, `DOC`, `EST` and `REP` appear in DOC-A-ARQ-04 as codes for
 administrator, teacher, student and representative. Their exact token format
@@ -74,9 +93,8 @@ describes a tutor as a teacher with an assignment. The decision is to use `DOC`
 and a separate assignment for the relevant parallel, not an independent `TUT`
 JWT role. The assignment is resolved by the authorized service, not included as
 an object-level permission in the token. The source catalogue still needs to be
-reconciled with this decision. Codes for the remaining
-roles and for custom roles are not established by these references; do not
-invent them here.
+reconciled with this decision. The user accepted the other proposed base role
+codes in the catalogue and chose stable `CUSTOM:<uuid>` identifiers for custom roles.
 
 ## Institution events
 
