@@ -1,0 +1,6 @@
+.terraform/
+*.tfstate
+*.tfstate.*
+bootstrap.tfvars
+backend.hcl
+backend_override.tf

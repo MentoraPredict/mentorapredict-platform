@@ -1,0 +1,6 @@
+bucket       = "replace-with-shared-account-state-bucket"
+key          = "15-shared/terraform.tfstate"
+region       = "us-east-1"
+encrypt      = true
+kms_key_id   = "alias/replace-with-state-key"
+use_lockfile = true
