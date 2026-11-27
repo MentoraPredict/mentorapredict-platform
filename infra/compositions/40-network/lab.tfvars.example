@@ -1,0 +1,8 @@
+region = "us-east-1"
+zonas  = ["us-east-1a", "us-east-1b"]
+entorno          = "staging"
+propietario      = "plataforma"
+centro_costo     = "replace-with-the-budget-code"
+modulo           = "a"
+confidencialidad = "interno"
+version_infra    = "replace-with-the-repository-version-tag"
