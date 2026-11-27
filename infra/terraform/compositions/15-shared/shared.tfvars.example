@@ -1,0 +1,12 @@
+region                 = "us-east-1"
+owner                  = "plataforma"
+cost_center            = "replace-me"
+confidentiality        = "interno"
+infrastructure_version = "replace-me"
+repositories = {
+  "example-service" = {
+    consumer_account_ids = []
+  }
+}
+# Enable replication only after verifying ownership of the registry-wide configuration.
+# replication_destination = { region = "us-west-2", registry_id = "REPLACE_WITH_ACCOUNT_ID" }
