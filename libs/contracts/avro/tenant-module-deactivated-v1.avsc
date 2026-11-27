@@ -1,0 +1,12 @@
+{
+  "type": "record",
+  "name": "ModuloDesactivado",
+  "namespace": "mentora.ten.v1",
+  "doc": "Payload of EVT-TEN-ModuloDesactivado. Event metadata belongs to the common envelope.",
+  "fields": [
+    {"name": "tenantId", "type": {"type": "string", "logicalType": "uuid"}},
+    {"name": "modulo", "type": "string"},
+    {"name": "instante", "type": {"type": "long", "logicalType": "timestamp-millis"}},
+    {"name": "politicaDatos", "type": {"type": "enum", "name": "PoliticaDatos", "symbols": ["CONSERVAR", "ARCHIVAR"]}}
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "type": "record",
+  "name": "InstitucionCreada",
+  "namespace": "mentora.ten.v1",
+  "doc": "Payload of EVT-TEN-InstitucionCreada. Event metadata belongs to the common envelope.",
+  "fields": [
+    {"name": "tenantId", "type": {"type": "string", "logicalType": "uuid"}},
+    {"name": "amie", "type": "string"},
+    {"name": "nombre", "type": "string"},
+    {"name": "plan", "type": "string"},
+    {"name": "modulosContratados", "type": {"type": "array", "items": "string"}},
+    {"name": "ubicacionDatos", "type": "string"},
+    {"name": "fechaInicio", "type": {"type": "int", "logicalType": "date"}}
+  ]
+}

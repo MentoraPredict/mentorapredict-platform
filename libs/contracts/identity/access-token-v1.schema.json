@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mentorapredict.example/contracts/identity/access-token-v1.schema.json",
+  "title": "MentoraPredict access token claims, proposed v1",
+  "description": "Shape of decoded access token claims. This schema does not validate the JWT signature, trust, expiry, revocation or permissions.",
+  "type": "object",
+  "required": ["iss", "aud", "exp", "iat", "jti", "sub", "sid", "roles", "azp", "idp"],
+  "properties": {
+    "iss": {"type": "string", "minLength": 1},
+    "aud": {
+      "oneOf": [
+        {"type": "string", "minLength": 1},
+        {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+      ]
+    },
+    "exp": {"type": "number"},
+    "iat": {"type": "number"},
+    "jti": {"type": "string", "minLength": 1},
+    "sub": {"type": "string", "minLength": 1},
+    "sid": {"type": "string", "minLength": 1},
+    "tid": {"type": "string", "minLength": 1},
+    "org": {"type": "string", "minLength": 1},
+    "roles": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "acr": {"type": "string", "minLength": 1},
+    "amr": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "azp": {"type": "string", "minLength": 1},
+    "idp": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": true
+}
