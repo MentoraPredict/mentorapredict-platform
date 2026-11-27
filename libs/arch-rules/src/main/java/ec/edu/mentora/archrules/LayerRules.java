@@ -31,7 +31,8 @@ public final class LayerRules {
               "org.jooq..",
               "software.amazon..",
               "org.apache.kafka..")
-          .allowEmptyShould(true);
+          .allowEmptyShould(true)
+          .as("H1 domain must not depend on other layers or frameworks");
 
   /** H2: the application layer does not import adapters. */
   @ArchTest
@@ -42,7 +43,8 @@ public final class LayerRules {
           .should()
           .dependOnClassesThat()
           .resideInAnyPackage("..infrastructure..", "..interfaces..")
-          .allowEmptyShould(true);
+          .allowEmptyShould(true)
+          .as("H2 application must not depend on adapters");
 
   /** H3: output adapters do not import input adapters. */
   @ArchTest
@@ -53,7 +55,8 @@ public final class LayerRules {
           .should()
           .dependOnClassesThat()
           .resideInAPackage("..interfaces..")
-          .allowEmptyShould(true);
+          .allowEmptyShould(true)
+          .as("H3 infrastructure must not depend on interfaces");
 
   /** H3: input adapters do not import output adapters. */
   @ArchTest
@@ -64,7 +67,8 @@ public final class LayerRules {
           .should()
           .dependOnClassesThat()
           .resideInAPackage("..infrastructure..")
-          .allowEmptyShould(true);
+          .allowEmptyShould(true)
+          .as("H3 interfaces must not depend on infrastructure");
 
   private LayerRules() {}
 }

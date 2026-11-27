@@ -29,7 +29,8 @@ public final class DeterminismRules {
           .resideInAPackage("..domain..")
           .should()
           .callMethodWhere(readsClockOrRandom())
-          .allowEmptyShould(true);
+          .allowEmptyShould(true)
+          .as("H10 domain must not read the clock or random sources directly");
 
   private static DescribedPredicate<JavaMethodCall> readsClockOrRandom() {
     return DescribedPredicate.describe(

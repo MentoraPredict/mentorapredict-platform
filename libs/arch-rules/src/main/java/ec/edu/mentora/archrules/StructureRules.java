@@ -25,7 +25,8 @@ public final class StructureRules {
           .should()
           .resideInAnyPackage(
               "..domain..", "..application..", "..infrastructure..", "..interfaces..")
-          .allowEmptyShould(true);
+          .allowEmptyShould(true)
+          .as("Layout a service must only contain the four hexagonal layers");
 
   private static DescribedPredicate<JavaClass> areBelowTheRootPackageOfAService() {
     return DescribedPredicate.describe(
