@@ -1,6 +1,0 @@
-.terraform/
-*.tfstate
-*.tfstate.*
-.terraform.tfstate.lock.info
-backend.hcl
-backend_override.tf

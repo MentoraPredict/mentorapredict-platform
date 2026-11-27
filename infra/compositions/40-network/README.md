@@ -1,7 +1,0 @@
-# QA network (work in progress)
-
-This initial composition defines the VPC, six subnet categories across two zones for staging and three for production (with two zones, the third CIDR block of each category stays reserved), a shared NAT for staging, routing, and S3/DynamoDB gateway endpoints. It is **not a complete implementation of MPC-189**: interface endpoints, security controls, tests and cost review remain outstanding. Do not apply it until those pieces have been reviewed and the lab budget approved. NAT incurs charges even while the lab session is stopped.
-
-For Learner Lab, copy `backend.hcl.example` to the ignored `backend.hcl` and set the existing bucket and KMS alias. Use `40-red/terraform.tfstate`, separate from bootstrap. This S3 key retains its previous name to avoid changing the state location when the local directory is renamed. Copy `lab.tfvars.example` to ignored `lab.tfvars`, verify that all listed availability zones are available in the account, and fill the required tags. Run `terraform init '-backend-config=backend.hcl'`, `terraform validate`, and `terraform plan '-var-file=lab.tfvars'` only after the module is complete. The primary region is `us-east-1` and the recovery region is `us-west-2`. This composition does not create the recovery network yet.
-
-Reference: DOC-INF-02 section 2.3 and DOC-A-INF-06 sections 3 and 10.1. The composition still creates a single NAT gateway; production needs one per zone.
