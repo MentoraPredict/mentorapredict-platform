@@ -18,7 +18,37 @@ variable "alias_clave" {
   }
 }
 
-variable "etiquetas" {
-  description = "Required resource tags agreed for the target account."
-  type        = map(string)
+variable "entorno" {
+  description = "Environment of the resources."
+  type        = string
+  default     = "staging"
+  validation {
+    condition     = contains(["produccion", "staging", "desarrollo", "sandbox", "compartida"], var.entorno)
+    error_message = "Allowed values: produccion, staging, desarrollo, sandbox, compartida."
+  }
+}
+
+variable "propietario" {
+  description = "Team or person that owns the resources."
+  type        = string
+}
+
+variable "centro_costo" {
+  description = "Budget code used to allocate costs."
+  type        = string
+}
+
+variable "modulo" {
+  description = "Owning module: a, b, c or plataforma."
+  type        = string
+}
+
+variable "confidencialidad" {
+  description = "Data classification: datos-personales, interno or publico."
+  type        = string
+}
+
+variable "version_infra" {
+  description = "Repository version tag that applies the resources."
+  type        = string
 }

@@ -1,8 +1,20 @@
+module "tags" {
+  source                 = "../../modulos/tags"
+  environment            = var.entorno
+  region                 = var.region
+  owner                  = var.propietario
+  cost_center            = var.centro_costo
+  layer                  = "bootstrap"
+  module                 = var.modulo
+  confidentiality        = var.confidencialidad
+  infrastructure_version = var.version_infra
+}
+
 provider "aws" {
   region = var.region
 
   default_tags {
-    tags = var.etiquetas
+    tags = module.tags.tags
   }
 }
 
