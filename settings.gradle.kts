@@ -16,3 +16,7 @@ listOf("services", "libs").forEach { group ->
         }
     }
 }
+
+listOf("classroom-service", "content-service", "assignment-service", "quiz-service", "grading-service",
+    "attendance-service", "attendance-compliance-service", "analytics-service", "reporting-service",
+    "risk-service").forEach { include(":services:$it") }
