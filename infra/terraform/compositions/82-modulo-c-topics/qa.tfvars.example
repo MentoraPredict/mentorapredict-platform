@@ -1,0 +1,2 @@
+region                  = "us-east-1"
+kafka_bootstrap_brokers = "replace-with-the-msk-iam-bootstrap-brokers"
