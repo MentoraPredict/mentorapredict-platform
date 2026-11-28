@@ -1,0 +1,29 @@
+nameOverride: reporting-service
+
+replicaCount: 2
+replicas_min: 2
+replicas_max: 8
+
+image:
+  repository: "REPLACE_WITH_ECR_REGISTRY/reporting-service"
+
+serviceAccount:
+  name: mentora-qa-rpt
+  annotations:
+    eks.amazonaws.com/role-arn: "arn:aws:iam::REPLACE_WITH_ACCOUNT_ID:role/mentora-qa-rpt"
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+autoscaling:
+  minReplicas: 2
+  maxReplicas: 8
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1

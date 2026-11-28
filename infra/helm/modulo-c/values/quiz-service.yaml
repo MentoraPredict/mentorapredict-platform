@@ -1,0 +1,29 @@
+nameOverride: quiz-service
+
+replicaCount: 3
+replicas_min: 3
+replicas_max: 12
+
+image:
+  repository: "REPLACE_WITH_ECR_REGISTRY/quiz-service"
+
+serviceAccount:
+  name: mentora-qa-cue
+  annotations:
+    eks.amazonaws.com/role-arn: "arn:aws:iam::REPLACE_WITH_ACCOUNT_ID:role/mentora-qa-cue"
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+autoscaling:
+  minReplicas: 3
+  maxReplicas: 12
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 2

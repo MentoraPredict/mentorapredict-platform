@@ -1,0 +1,29 @@
+nameOverride: analytics-service
+
+replicaCount: 2
+replicas_min: 2
+replicas_max: 8
+
+image:
+  repository: "REPLACE_WITH_ECR_REGISTRY/analytics-service"
+
+serviceAccount:
+  name: mentora-qa-anl
+  annotations:
+    eks.amazonaws.com/role-arn: "arn:aws:iam::REPLACE_WITH_ACCOUNT_ID:role/mentora-qa-anl"
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: 2000m
+    memory: 2Gi
+
+autoscaling:
+  minReplicas: 2
+  maxReplicas: 8
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1

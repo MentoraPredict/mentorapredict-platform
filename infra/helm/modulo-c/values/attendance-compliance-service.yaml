@@ -1,0 +1,29 @@
+nameOverride: attendance-compliance-service
+
+replicaCount: 2
+replicas_min: 2
+replicas_max: 8
+
+image:
+  repository: "REPLACE_WITH_ECR_REGISTRY/attendance-compliance-service"
+
+serviceAccount:
+  name: mentora-qa-atc
+  annotations:
+    eks.amazonaws.com/role-arn: "arn:aws:iam::REPLACE_WITH_ACCOUNT_ID:role/mentora-qa-atc"
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 384Mi
+  limits:
+    cpu: 500m
+    memory: 768Mi
+
+autoscaling:
+  minReplicas: 2
+  maxReplicas: 8
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
