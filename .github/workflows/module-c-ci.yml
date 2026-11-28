@@ -1,0 +1,179 @@
+name: module-c-ci
+
+on:
+  pull_request:
+    branches: [dev]
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - "services/classroom-service/**"
+      - "services/content-service/**"
+      - "services/assignment-service/**"
+      - "services/quiz-service/**"
+      - "services/grading-service/**"
+      - "services/attendance-service/**"
+      - "services/attendance-compliance-service/**"
+      - "services/analytics-service/**"
+      - "services/reporting-service/**"
+      - "services/risk-service/**"
+      - "build-logic/**"
+      - "libs/arch-rules/**"
+      - "libs/platform/**"
+      - "libs/contracts/**"
+      - "libs/testing/**"
+      - "gradle/**"
+      - "settings.gradle.kts"
+      - "gradle.properties"
+      - "gradlew"
+      - ".github/workflows/module-c-ci.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: module-c-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: Verify ${{ matrix.service }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        service:
+          - classroom-service
+          - content-service
+          - assignment-service
+          - quiz-service
+          - grading-service
+          - attendance-service
+          - attendance-compliance-service
+          - analytics-service
+          - reporting-service
+          - risk-service
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Java 21
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v4.7.1
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+
+      - name: Build service
+        run: >-
+          ./gradlew --no-daemon --stacktrace
+          ":services:${{ matrix.service }}:build"
+          -x ":services:${{ matrix.service }}:test"
+
+      - name: Run unit tests and ArchUnit rules
+        run: >-
+          ./gradlew --no-daemon --stacktrace
+          ":services:${{ matrix.service }}:test"
+
+      - name: Enforce architecture rules H1-H10
+        env:
+          SERVICE: ${{ matrix.service }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import sys
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          service = os.environ["SERVICE"]
+          report_dir = Path("services") / service / "build" / "test-results" / "test"
+          expected = "ArquitecturaHexagonalTest"
+          reports = list(report_dir.glob("TEST-*.xml"))
+          matching = []
+
+          for report in reports:
+              try:
+                  root = ET.parse(report).getroot()
+              except ET.ParseError as error:
+                  print(f"Invalid JUnit XML in {report}: {error}", file=sys.stderr)
+                  sys.exit(1)
+
+              suite_name = root.attrib.get("name", "")
+              if expected in suite_name or expected in report.name:
+                  matching.append(report)
+
+          if not matching:
+              print(
+                  f"Architecture gate was not executed for {service}: "
+                  f"no JUnit report for {expected} was found in {report_dir}",
+                  file=sys.stderr,
+              )
+              sys.exit(1)
+
+          print(f"ArchUnit H1-H10 suite executed successfully for {service}.")
+          PY
+
+      - name: Run integration tests with Testcontainers
+        run: >-
+          ./gradlew --no-daemon --stacktrace
+          ":services:${{ matrix.service }}:integrationTest"
+
+      - name: Enforce 80% domain line coverage
+        env:
+          SERVICE: ${{ matrix.service }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import sys
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          service = os.environ["SERVICE"]
+          report = (
+              Path("services")
+              / service
+              / "build"
+              / "reports"
+              / "jacoco"
+              / "test"
+              / "jacocoTestReport.xml"
+          )
+
+          if not report.is_file():
+              print(f"JaCoCo XML report not found: {report}", file=sys.stderr)
+              sys.exit(1)
+
+          root = ET.parse(report).getroot()
+          covered = 0
+          missed = 0
+
+          for package in root.findall("package"):
+              package_name = package.attrib.get("name", "")
+              if "/domain/" not in f"/{package_name}/":
+                  continue
+
+              for counter in package.findall("counter"):
+                  if counter.attrib.get("type") == "LINE":
+                      covered += int(counter.attrib["covered"])
+                      missed += int(counter.attrib["missed"])
+
+          total = covered + missed
+          if total == 0:
+              print(
+                  f"No executable domain lines found in {service}; "
+                  "the domain coverage threshold is not applicable yet."
+              )
+              sys.exit(0)
+
+          percentage = covered * 100.0 / total
+          print(
+              f"{service} domain line coverage: {percentage:.2f}% "
+              f"({covered}/{total} lines; minimum 80.00%)."
+          )
+
+          if percentage < 80.0:
+              print("Domain coverage is below the required 80%.", file=sys.stderr)
+              sys.exit(1)
+          PY

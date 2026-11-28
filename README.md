@@ -294,6 +294,20 @@ All versions come from `gradle/libs.versions.toml`; do not write a version in a 
 | SpotBugs | Bug patterns in the compiled code |
 | JUnit 5 and JaCoCo | Tests run on the JUnit platform; JaCoCo writes XML and HTML reports after them |
 
+### Module C CI workflow
+
+Pull requests targeting `dev` run `.github/workflows/module-c-ci.yml` when they change one of the ten Module C service folders or shared Gradle, architecture-rule or testing components. The workflow verifies all ten services in parallel with Java 21:
+
+1. Runs the Gradle service build and its static quality checks.
+2. Runs unit tests, including the service's ArchUnit H1-H10 suite.
+3. Confirms that the architecture test suite produced a JUnit report.
+4. Runs the `integrationTest` source set with Testcontainers.
+5. Enforces at least 80% JaCoCo line coverage for executable classes in the `domain` package.
+
+A service with no executable domain lines yet is reported as not applicable; once domain code exists, the 80% threshold is enforced. Any build, test, architecture, integration or coverage failure blocks the workflow.
+
+This workflow is a CI verification gate only. It does not publish images or deploy services. The current `gitops/` directory has no deployment manifests, so a GitOps deployment trigger must be integrated only after its owning deployment repository and manifest contract are available.
+
 ### Rule H4: services never depend on services
 
 A project can depend only on `libs/*`. If a build file declares `project(":services:...")` (and it is not the project itself), Gradle stops while configuring the build with a message that starts with `Rule H4 violated` and names both projects. There is no flag to skip the check: move the shared code to a library under `libs/` instead.
