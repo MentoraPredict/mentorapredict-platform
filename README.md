@@ -166,6 +166,17 @@ class ArquitecturaHexagonalTest {
 
 `libs/arch-rules` has its own tests with deliberately broken fixtures, so each rule is proven to fail when it should.
 
+## Module C QA infrastructure
+
+The Module C data layer is added on top of the Module A QA infrastructure without modifying it. It lives in [`infra/terraform/compositions/80-modulo-c`](infra/terraform/compositions/80-modulo-c/README.md) and creates the shared PostgreSQL instance, Valkey, per-service IRSA roles, Secrets Manager entries, KMS keys, SSM parameters and the Kafka topic catalogue. The database and topic stages are in `81-modulo-c-databases` and `82-modulo-c-topics`. The Helm values that parameterize the Module A chart are in [`infra/helm/modulo-c`](infra/helm/modulo-c/README.md).
+
+The apply order, the additional monthly cost and the security model are documented in the composition README. The modules and the composition have tests with mocked providers, so they can be planned without AWS credentials:
+
+```bash
+terraform -chdir=infra/terraform/modules/modulo-c-data test
+terraform -chdir=infra/terraform/compositions/80-modulo-c test
+```
+
 ## Requirements
 
 | Tool | Used for |
