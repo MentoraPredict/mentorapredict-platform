@@ -11,7 +11,12 @@ public final class CycleRules {
   /** H8: the layers of a service (ec.edu.mentora.&lt;svc&gt;.&lt;layer&gt;) form no cycle. */
   @ArchTest
   public static final ArchRule H8_LAYERS_HAVE_NO_CYCLES =
-      slices().matching("ec.edu.mentora.*.(*)..").should().beFreeOfCycles().allowEmptyShould(true);
+      slices()
+          .matching("ec.edu.mentora.*.(*)..")
+          .should()
+          .beFreeOfCycles()
+          .allowEmptyShould(true)
+          .as("H8 layers must be free of cycles");
 
   private CycleRules() {}
 }

@@ -66,7 +66,7 @@ Each service of this module owns its logical database. According to its cards, s
 
 ## Rules for every service
 
-- **Rule H4:** a service depends only on `libs/*`, never on another service. Gradle enforces it.
+- **Rule H4:** a service depends only on `libs/*`, never on another service. Gradle and ArchUnit enforce it.
 - Contracts between services and with clients live in [`libs/contracts`](../libs/contracts/README.md) and are written before the code.
 - Each service owns its data: no service reads the database of another.
 - Data of an institution is isolated by `tenant_id`; `regulation-service` is the documented exception, and `documentation-service` is also a platform service with its own storage.

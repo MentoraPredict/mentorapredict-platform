@@ -10,10 +10,11 @@ import com.tngtech.archunit.lang.ArchRule;
 final class Fixtures {
 
   private static final String VIOLATIONS = "ec.edu.mentora.fixtureviolations";
+  private static final String VALID = "ec.edu.mentora.fixturevalid";
 
   /** Checks that the rule fails on the violating service and names every expected piece. */
   static void assertRuleFails(ArchRule rule, String... expectedInReport) {
-    JavaClasses classes = new ClassFileImporter().importPackages(VIOLATIONS);
+    JavaClasses classes = new ClassFileImporter().importPackages(VIOLATIONS, VALID);
     assertThatThrownBy(() -> rule.check(classes))
         .isInstanceOf(AssertionError.class)
         .hasMessageContainingAll(expectedInReport);

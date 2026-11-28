@@ -88,8 +88,9 @@ mentorapredict-services/
 ├── config/checkstyle/         shared Checkstyle rules
 ├── libs/
 │   ├── contracts/             OpenAPI, Avro and gRPC (contracts between services)
-│   ├── arch-rules/            ArchUnit rules of the hexagonal architecture (H1, H2, H3, H8, H10)
-│   └── platform/              reserved for shared technical code (empty for now)
+│   ├── arch-rules/            ArchUnit rules of the hexagonal architecture (H1 to H10)
+│   ├── platform/              shared technical code: UUID v7, clock, domain errors, outbox, inbox, correlation and tenant context
+│   └── testing/               test doubles: fixed clock, sequential identifiers, in-memory outbox and inbox
 ├── services/<svc>-service/    one Gradle subproject per service (29)
 ├── ml/                        risk inference and data analysis (Python)
 ├── extensions/keycloak-spi/   Keycloak extensions
@@ -134,11 +135,16 @@ The rules of DOC-CAL-08 section 3 are ArchUnit tests that live in `libs/arch-rul
 | H1 | `domain` importing other layers or any framework: Spring, Jakarta (persistence, validation, annotations), Jackson, Hibernate, jOOQ, cloud SDKs or Kafka |
 | H2 | `application` importing `infrastructure` or `interfaces` |
 | H3 | `infrastructure` and `interfaces` importing each other |
+| H4 | a service depending on another service; only `libs/*` and the generated contracts are allowed |
+| H5 | a shared library containing the business logic of a service |
+| H6 | SQL or database access outside `infrastructure` |
+| H7 | a repository that accesses SQL without resolving `tenant_id` through `TenantContext` |
 | H8 | cycles between the layers |
+| H9 | `domain` or `application` publishing directly to Kafka or depending on the outbox adapter instead of an output port |
 | H10 | `domain` reading the clock or random sources directly (`Instant.now()`, `UUID.randomUUID()`, `Math.random()`, `System.currentTimeMillis()` and similar); inject a `Clock` or an identifier source instead |
 | Layout | any package under the service root other than the four layers |
 
-H4 is checked by Gradle (see the convention plugins) and H5 to H7 and H9 are not covered by these tests yet.
+All ten rules run as ArchUnit tests, so any violation fails the build. The allowed exception is an output adapter: it may use SQL, `TenantContext` and the outbox because it lives in `infrastructure`.
 
 The rules only check a service that includes the test below: a service that does not add it is not verified. Add it to every new service, whether you started from `sample-service` or not:
 
