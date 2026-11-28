@@ -2,7 +2,7 @@
 
 Entry point of the microservices of MentoraPredict: what each of the **29 services** does, which module it belongs to and what makes it different. Each service lives in `services/<name>-service/`.
 
-**Current state:** only [`sample-service`](sample-service/README.md) exists in this folder. It is the example of the optional [service template](CREATING-A-SERVICE.md) and is not one of the 29. The others are described here before they are built.
+**Current state:** [`sample-service`](sample-service/README.md) is the example of the optional [service template](CREATING-A-SERVICE.md), and [`identity-service`](identity-service/README.md) has an initial executable foundation. The remaining services are described here before they are built.
 
 This page is a summary. The sources are the platform catalog (DOC-ARQ-04) and the service cards of each module (DOC-A-ARQ-04, DOC-B-ARQ-04 and DOC-C-ARQ-04) in Confluence. If they differ from this page, check them and update it.
 

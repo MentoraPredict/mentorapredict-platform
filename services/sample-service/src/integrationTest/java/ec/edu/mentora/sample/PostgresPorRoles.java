@@ -22,7 +22,8 @@ class PostgresPorRoles implements ApplicationContextInitializer<ConfigurableAppl
       new PostgreSQLContainer("postgres:17-alpine")
           .withCopyFileToContainer(
               // Relative to the folder of the service, where Gradle runs the tests.
-              MountableFile.forHostPath(Path.of("../../infra/local/postgres/01-roles.sql")),
+              MountableFile.forHostPath(
+                  Path.of("../../infra/local/sample-postgres/01-roles.sql")),
               "/docker-entrypoint-initdb.d/01-roles.sql");
 
   @Override

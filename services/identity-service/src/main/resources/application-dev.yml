@@ -1,0 +1,18 @@
+logging:
+  level:
+    ec.edu.mentora: DEBUG
+
+springdoc:
+  api-docs:
+    enabled: true
+    version: OPENAPI_3_1
+  swagger-ui:
+    enabled: true
+  show-actuator: true
+
+# Local development values only. Override with environment variables when needed.
+DB_URL: jdbc:postgresql://localhost:${IDENTITY_DB_PORT:5433}/identity
+DB_USER: idn_app
+DB_PASSWORD: idn_app
+DB_MIGRATION_USER: idn_migrator
+DB_MIGRATION_PASSWORD: idn_migrator

@@ -251,7 +251,7 @@ Never run the service as a superuser or as a role with `BYPASSRLS`: row-level se
 | `DB_MIGRATION_USER`, `DB_MIGRATION_PASSWORD` | Connection of Flyway |
 | `DB_MIGRATION_URL` | Optional, `DB_URL` by default. Point it directly at the writer instance when the service goes through PgBouncer |
 
-The `dev` profile has defaults that match `compose.yml`; `qa` and `prod` have none. Locally, the roles are created by `infra/local/postgres/01-roles.sql` only when the database is new. **If you started the database before these roles existed**, recreate it once with `docker compose down -v` (this deletes your local data).
+The `dev` profile has defaults that match `compose.yml`; `qa` and `prod` have none. Locally, the roles are created by `infra/local/sample-postgres/01-roles.sql` only when the database is new. **If you started the database before these roles existed**, recreate it once with `docker compose down -v` (this deletes your local data).
 
 `./gradlew build` still works without Docker: those tests start the service without a database (`src/test/resources/config/application.yml`). The migrations and the isolation between institutions are tested by `./gradlew integrationTest`.
 
