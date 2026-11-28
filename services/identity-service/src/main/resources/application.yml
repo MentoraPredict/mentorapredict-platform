@@ -7,6 +7,16 @@ spring:
   mvc:
     problemdetails:
       enabled: true
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  flyway:
+    url: ${DB_MIGRATION_URL:${DB_URL}}
+    user: ${DB_MIGRATION_USER}
+    password: ${DB_MIGRATION_PASSWORD}
+    clean-disabled: true
+    validate-migration-naming: true
 
 management:
   endpoints:
@@ -19,3 +29,8 @@ management:
         enabled: true
       show-details: never
       show-components: never
+      group:
+        liveness:
+          include: livenessState
+        readiness:
+          include: readinessState,db
