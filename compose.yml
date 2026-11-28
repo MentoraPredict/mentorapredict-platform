@@ -1,4 +1,4 @@
-# Local development environment: PostgreSQL and Kafka (DOC-ARQ-13).
+# Local development environment: identity-service, PostgreSQL and Kafka (DOC-ARQ-13).
 #
 #   docker compose up -d      start them
 #   docker compose down       stop them (add -v to also delete the data)
@@ -12,6 +12,16 @@
 name: mentora-local
 
 services:
+  identity-service:
+    build:
+      context: .
+      dockerfile: services/identity-service/Dockerfile
+    image: mentorapredict/identity-service:local
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+    ports:
+      - "${IDENTITY_PORT:-8081}:8080"
+
   postgres:
     image: postgres:17-alpine
     container_name: mentora-postgres

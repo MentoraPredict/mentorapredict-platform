@@ -5,6 +5,8 @@
 .idea
 .vscode
 .gradle
+**/.gradle
+**/.kotlin
 **/build
 **/.terraform
 **/*.tfstate

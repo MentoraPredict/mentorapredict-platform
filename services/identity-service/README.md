@@ -18,18 +18,22 @@ In another terminal, check `http://localhost:8080/actuator/health` and the
 does not require a database or broker. The `dev`, `qa` and `prod` profiles set
 logging levels; do not commit secrets when adding future integrations.
 
-## Build and run the container
+## Build and run with Docker Compose
 
 From the repository root, with Docker running:
 
 ```powershell
-docker build -f services/identity-service/Dockerfile -t mentorapredict/identity-service:local .
-docker run --rm -p 8080:8080 -e SPRING_PROFILES_ACTIVE=dev mentorapredict/identity-service:local
+docker compose up -d --build identity-service
+Invoke-RestMethod http://localhost:8081/actuator/health
+docker compose logs identity-service
+docker compose stop identity-service
 ```
 
-Stop the container with `Ctrl+C`. The Dockerfile builds from the repository root
-because the Gradle wrapper, convention plugins and shared libraries live there.
-It runs the application as a non-root user.
+The service is exposed on port `8081` by default; set `IDENTITY_PORT` in the
+local `.env` file to use another host port. It does not yet depend on PostgreSQL
+or Kafka. The Dockerfile builds from the repository root because the Gradle
+wrapper, convention plugins and shared libraries live there. It runs the
+application as a non-root user.
 
 ## Tests and contracts
 
