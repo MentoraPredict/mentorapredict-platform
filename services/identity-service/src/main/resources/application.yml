@@ -34,3 +34,10 @@ management:
           include: livenessState
         readiness:
           include: readinessState,db
+
+# The local documentation interface is enabled only by the dev profile.
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false

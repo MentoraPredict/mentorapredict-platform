@@ -57,3 +57,13 @@ application as a non-root user.
 The shared identity contracts are indexed in [libs/contracts](../../libs/contracts/README.md).
 They are not implemented by this foundation. Federated login, identity policies,
 Keycloak and deployment to AWS are covered by separate tasks.
+
+## Local Swagger UI
+
+With the `dev` profile, open `http://localhost:8081/swagger-ui.html` when using
+Compose, or `http://localhost:8080/swagger-ui.html` when running Gradle locally.
+The generated OpenAPI document is available at `/v3/api-docs` and currently
+describes operational Actuator routes only; the service has no business API yet.
+The UI and generated documents are disabled by default, including QA and prod.
+The module A public REST contract belongs to the `tenant-service` facade; this
+local operational documentation is not that public contract.
