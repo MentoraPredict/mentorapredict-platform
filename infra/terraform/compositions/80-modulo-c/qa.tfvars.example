@@ -1,0 +1,15 @@
+region                  = "us-east-1"
+account_id              = "replace-with-the-12-digit-account-id"
+environment             = "staging"
+owner                   = "plataforma"
+cost_center             = "replace-with-the-budget-code"
+infrastructure_version  = "replace-with-the-repository-version-tag"
+vpc_id                  = "replace-with-the-module-a-vpc-id"
+data_subnet_ids         = ["replace-with-data-subnet-a", "replace-with-data-subnet-b"]
+client_security_group_ids = ["replace-with-the-eks-node-security-group-id"]
+oidc_provider_arn       = "replace-with-the-eks-oidc-provider-arn"
+oidc_issuer             = "oidc.eks.us-east-1.amazonaws.com/id/replace-with-the-cluster-id"
+kafka_bootstrap_brokers = "replace-with-the-msk-tls-bootstrap-brokers"
+kafka_cluster_arn       = "replace-with-the-msk-cluster-arn"
+content_bucket_arns     = []
+content_kms_key_arns    = []
