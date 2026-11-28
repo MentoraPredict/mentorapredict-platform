@@ -1,14 +1,3 @@
-terraform {
-  required_version = ">= 1.10.0, < 2.0.0"
-  required_providers {
-    kafka = {
-      source  = "Mongey/kafka"
-      version = "~> 0.7"
-    }
-  }
-  backend "s3" {}
-}
-
 provider "kafka" {
   bootstrap_servers = [var.kafka_bootstrap_brokers]
   tls_enabled       = true
