@@ -2,7 +2,7 @@
 
 Entry point of the microservices of MentoraPredict: what each of the **29 services** does, which module it belongs to and what makes it different. Each service lives in `services/<name>-service/`.
 
-**Current state:** [`sample-service`](sample-service/README.md) is the example of the optional [service template](CREATING-A-SERVICE.md) and is not one of the 29. The ten services of Module C already have their hexagonal skeleton in this folder: `classroom-service`, `content-service`, `assignment-service`, `quiz-service`, `grading-service`, `attendance-service`, `attendance-compliance-service`, `analytics-service`, `reporting-service` and `risk-service`. The skeletons compile, carry no business logic yet and run the ArchUnit rules H1 to H10. The Module A and B services are described here before they are built.
+**Current state:** [`sample-service`](sample-service/README.md) is the example of the optional [service template](CREATING-A-SERVICE.md), and [`identity-service`](identity-service/README.md) has an initial executable foundation. The remaining services are described here before they are built.
 
 This page is a summary. The sources are the platform catalog (DOC-ARQ-04) and the service cards of each module (DOC-A-ARQ-04, DOC-B-ARQ-04 and DOC-C-ARQ-04) in Confluence. If they differ from this page, check them and update it.
 

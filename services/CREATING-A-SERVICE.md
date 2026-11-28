@@ -80,7 +80,7 @@ docker exec mentora-postgres psql -U mentora -d $SVC \
   -c "GRANT USAGE, CREATE ON SCHEMA public TO svc_migrator" -c "GRANT USAGE ON SCHEMA public TO svc_app"
 ```
 
-If you changed `POSTGRES_USER` in `.env`, use that user instead of `mentora`. The roles come from `infra/local/postgres/01-roles.sql`; if `svc_app` does not exist, see [Database migrations](../README.md#database-migrations). `docker compose down -v` deletes your database too, so you have to create it again.
+If you changed `POSTGRES_USER` in `.env`, use that user instead of `mentora`. The roles come from `infra/local/sample-postgres/01-roles.sql`; if `svc_app` does not exist, see [Database migrations](../README.md#database-migrations). `docker compose down -v` deletes your database too, so you have to create it again.
 
 Then start the service and open `http://localhost:8080/actuator/health` (add `--server.port=8081` inside `--args` if the port is taken):
 

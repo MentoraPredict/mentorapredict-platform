@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: identity-service
+  threads:
+    virtual:
+      enabled: true
+  mvc:
+    problemdetails:
+      enabled: true
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  flyway:
+    url: ${DB_MIGRATION_URL:${DB_URL}}
+    user: ${DB_MIGRATION_USER}
+    password: ${DB_MIGRATION_PASSWORD}
+    clean-disabled: true
+    validate-migration-naming: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never
+      show-components: never
+      group:
+        liveness:
+          include: livenessState
+        readiness:
+          include: readinessState,db
+
+# The local documentation interface is enabled only by the dev profile.
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
