@@ -69,8 +69,8 @@ jobs:
       - name: Build service
         run: >-
           ./gradlew --no-daemon --stacktrace
-          ":services:${{ matrix.service }}:compileJava"
-          ":services:${{ matrix.service }}:compileTestJava"
+          ":services:${{ matrix.service }}:build"
+          -x ":services:${{ matrix.service }}:test"
 
       - name: Run unit tests and ArchUnit rules
         run: >-
